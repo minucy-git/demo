@@ -52,7 +52,7 @@ jobs:
     
     - name: Copy JAR to EC2
       run: |
-        scp -i ~/.ssh/ec2-key.pem -o StrictHostKeyChecking=no build/libs/*.jar $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
+        scp -i ~/.ssh/ec2-key.pem build/libs/*.jar $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
         # ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "sudo systemctl restart your-spring-boot-service" 
 
 
