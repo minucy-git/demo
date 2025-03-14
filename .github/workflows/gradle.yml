@@ -68,3 +68,16 @@ jobs:
     # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+    - name: Deploy to AWS Linux server
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  # SSH 키
+        SERVER_IP: ${{ secrets.SERVER_IP }}  # AWS Linux 서버 IP
+        SERVER_USER: ${{ secrets.SERVER_USER }}  # 서버 사용자명 (예: ec2-user)
+        DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}  # 배포 경로 (예: /home/ec2-user/app)
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        scp -o StrictHostKeyChecking=no build/libs/*.jar $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
+        # ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "sudo systemctl restart your-spring-boot-service"
